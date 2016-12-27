@@ -1,0 +1,14 @@
+Here we are utilizing the The MVT implementation likes the the django one
+
+MVT
+	M -> models
+	V -> views (called controllers(handlers on google appengine) in others implementations)
+	T -> template (called views in other implementations)
+
+#### MVC NORMAL
+
+	M -> models
+	V -> Html templates
+	C -> Controllers(Handlers)
+
+Full Stack Foundations

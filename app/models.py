@@ -9,6 +9,25 @@ class User(db.Model):
 	# backref to get post.author
 	posts = db.relationship("Post", backref="author", lazy="dynamic")
 
+	# flask login needs this methos for handling authentication
+	@property
+	def is_authenticated(self):
+		return True
+
+	@property
+	def is_active(self):
+		return True
+
+	@property
+	def is_anonymous(self):
+		return False
+
+	def get_id(self):
+		try :
+			return unicode(self.id) # python2
+		except NameError:	
+			return str(self.id) # python 3
+
 	# for prints objects for debugging
 	def __repr__(self):
 		return "<User %r>" % (self.nickname)
