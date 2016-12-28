@@ -6,7 +6,7 @@ from app import app, db, lm
 from .forms import *
 from .models import User
 import utility
-
+from datetime import datetime
 # load user from database
 @lm.user_loader
 def load_user(id):
@@ -16,6 +16,11 @@ def load_user(id):
 @app.before_request
 def before_request():
 	g.user = current_user
+	# update the time the last user visited the page
+	if g.user.is_authenticated:
+		g.user.last_seen = datetime.utcnow()
+		db.session.add(g.user)
+		db.session.commit()
 
 @app.route('/')
 @app.route('/index')
@@ -23,6 +28,8 @@ def before_request():
 def index():
 	# getting the user logged
 	user = g.user
+	if not g.user.is_authenticated :
+		return redirect(url_for('login'))
 	posts = [  # fake array of posts
         { 
             'author': {'nickname': 'John'}, 
@@ -44,6 +51,7 @@ def index():
 # login view function
 # g = place to store and share data during the life of a request.
 def login():
+	""" View For Login User"""
 	# # if the user is logged go to the index
 	if g.user and g.user.is_authenticated:
 		# flask generating url, is better than harcoding
@@ -69,6 +77,7 @@ def login():
 @app.route("/logout")
 @login_required  # need been logged to access it!
 def logout():
+	""" View for Logout Users """
 	user = current_user
 	user.authenticated = False
 	db.session.add(user)
@@ -78,6 +87,7 @@ def logout():
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+	""" View for Sign Up a user """
 	form = SignUpForm()
 	if request.method == "POST" and form.validate():
 		user = User(nickname=form.username.data, password=utility.make_password_hash(form.username.data, form.password.data))
@@ -88,3 +98,36 @@ def signup():
 		return redirect(url_for('index'))
 	return render_template("signup.html",
 							form = form)
+
+# <nickname> = parameter
+@app.route('/user/<nickname>')
+@login_required
+def user(nickname):
+	""" View to Show the user Profile"""
+	user = User.query.filter_by(nickname=nickname).first()
+	if user == None :
+		flash("User %s Not Found" % nickname)
+		return redirect(url_for('index'))
+	posts = [
+		{"author": user, "body" : 'Test Post #1'},
+		{"author": user, "body" : 'Test Post #2'},
+	]
+	return render_template('user.html',
+							user = user,
+							posts = posts)
+
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+	form = EditForm()
+	if request.method == "POST" and form.validate_on_submit:
+		g.user.nickname = form.nickname.data
+		g.user.about_me = form.about_me.data
+		db.session.add(g.user)
+		db.session.commit()
+		flash("Your changes has been saved")
+		return redirect(url_for('edit'))
+	else:
+		form.nickname.data = g.user.nickname
+		form.about_me.data = g.user.about_me
+	return render_template('edit.html', form=form)

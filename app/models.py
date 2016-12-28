@@ -1,4 +1,5 @@
 from app import db
+from hashlib import md5
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +10,8 @@ class User(db.Model):
 	# to get user.posts member that gets us the list of posts from the user
 	# backref to get post.author
 	posts = db.relationship("Post", backref="author", lazy="dynamic")
+	about_me = db.Column(db.String(40))
+	last_seen = db.Column(db.DateTime)
 
 	# flask login needs this methos for handling authentication
 	@property
@@ -39,6 +42,10 @@ class User(db.Model):
 	# for prints objects for debugging
 	def __repr__(self):
 		return "<User %r>" % (self.nickname)
+
+	def avatar(self, size):
+		# d -> placeholder for image, s = pixel of images
+		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
