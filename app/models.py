@@ -47,6 +47,19 @@ class User(db.Model):
 		# d -> placeholder for image, s = pixel of images
 		return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
+	@staticmethod
+	def make_unique_nickname(nickname):
+		""" Suggest a new nickname if the passed on the parameter exits """
+		if User.query.filter_by(nickname=nickname).first() is None:
+			return nickname
+		version = 2
+		while True :
+			new_nickname = new_nickname + str(version)
+			if user.query.filter_by(nickname=new_nickname).first() is None:
+				break
+			version += 1
+		return new_nickname
+
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	body = db.Column(db.String(140))

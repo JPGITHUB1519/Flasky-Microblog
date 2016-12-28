@@ -22,6 +22,18 @@ def before_request():
 		db.session.add(g.user)
 		db.session.commit()
 
+#errors handlers
+@app.errorhandler(404)
+def not_found_error(error):
+	return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+	# rollback because session is going to arrive in an invalid state, so we have to roll it back in case a working session is needed for the rendering 
+	# of the template for the 500 error.
+	db.session.rollback()
+	return render_template("500.html"), 500
+
 @app.route('/')
 @app.route('/index')
 @login_required  # need been logged to access it!
@@ -119,7 +131,8 @@ def user(nickname):
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
-	form = EditForm()
+	# passing in the constructor the actual user nickname
+	form = EditForm(g.user.nickname)
 	if request.method == "POST" and form.validate_on_submit:
 		g.user.nickname = form.nickname.data
 		g.user.about_me = form.about_me.data

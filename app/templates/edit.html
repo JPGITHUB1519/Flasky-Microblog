@@ -8,6 +8,10 @@
 				Your Nickname:
 				{{ form.nickname(size=24) }}
 			 </label>
+			 {% for error in form.errors.nickname %}
+			 	<br>
+			 	<span style="color : red;">[{{ error }}]</span>
+			 {% endfor %}
 		</div>
 		<div>
 			<div>
