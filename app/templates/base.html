@@ -8,7 +8,14 @@
 	{% endif %}
 </head>
 <body>
-	<div>Microblog : <a href="/index">Home</a></div>
+	<div>
+		Microblog : 
+		<a href="{{ url_for('logout') }}">Home</a>
+		{% if g.user.is_authenticated %}
+			| <a href="{{ url_for('logout') }}">Logout</a>
+		{% endif %}
+	</div>
+
 	<hr>
 	<!-- acceding flashed messages -->
 	{% with messages = get_flashed_messages() %}

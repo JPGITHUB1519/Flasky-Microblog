@@ -12,17 +12,24 @@ class User(db.Model):
 
 	# flask login needs this methos for handling authentication
 	@property
+	# # neccesary to flask-login
+	#returns True if the user has provided valid credentials
 	def is_authenticated(self):
 		return True
 
 	@property
+	# neccesary to flask-login
+	# returns True if the user's account is active
 	def is_active(self):
 		return True
 
 	@property
+	# neccesary to flask-login
+	# returns True if the current user is an anonymous user
 	def is_anonymous(self):
 		return False
-
+	# neccesary to flask-login
+	# returns the unique ID for that object
 	def get_id(self):
 		try :
 			return unicode(self.id) # python2

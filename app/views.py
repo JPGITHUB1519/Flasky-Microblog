@@ -45,31 +45,46 @@ def index():
 # g = place to store and share data during the life of a request.
 def login():
 	# # if the user is logged go to the index
-	# if g.user is not None and g.user.is_authenticated:
-	# 	# flask generating url, is better than harcoding
-	# 	return redirect(url_for('index'))
+	if g.user and g.user.is_authenticated:
+		# flask generating url, is better than harcoding
+		return redirect(url_for('index'))
 	form = LoginForm()
 	# if all validations is well it returns true and make the actions
 	if form.validate_on_submit():
 		user = User.query.filter_by(nickname=form.username.data).first()
 		if user:
 			if utility.valid_password(form.username.data, form.password.data, user.password):
-				login_user(user)
+				user.authenticated = True
+				db.session.add(user)
+				db.session.commit()
+				login_user(user, remember=form.remember_me.data)
 				return redirect(request.args.get('next') or url_for('index'))
-
 	return render_template("login.html",
 	title="Sign In",
 	# sending wtf form
 	form=form,
 	providers=app.config["OPENID_PROVIDERS"])
 
+
+@app.route("/logout")
+@login_required  # need been logged to access it!
+def logout():
+	user = current_user
+	user.authenticated = False
+	db.session.add(user)
+	db.session.commit()
+	logout_user()
+	return redirect(url_for('login'))
+
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
 	form = SignUpForm()
 	if request.method == "POST" and form.validate():
 		user = User(nickname=form.username.data, password=utility.make_password_hash(form.username.data, form.password.data))
+		user.authenticated = True
 		db.session.add(user)
 		db.session.commit()
-		return redirect(url_for('login'))
+		login_user(user)
+		return redirect(url_for('index'))
 	return render_template("signup.html",
 							form = form)
