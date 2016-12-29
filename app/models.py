@@ -50,11 +50,12 @@ class User(db.Model):
 	@staticmethod
 	def make_unique_nickname(nickname):
 		""" Suggest a new nickname if the passed on the parameter exits """
-		if User.query.filter_by(nickname=nickname).first() is None:
-			return nickname
+		user = User.query.filter_by(nickname=nickname).first()
+		if user is None:
+			return user.nickname
 		version = 2
 		while True :
-			new_nickname = new_nickname + str(version)
+			new_nickname = user.nickname + str(version)
 			if user.query.filter_by(nickname=new_nickname).first() is None:
 				break
 			version += 1
