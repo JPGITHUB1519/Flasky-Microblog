@@ -46,6 +46,8 @@ class EditForm(Form):
 		flash(validated)
 		return validated
 
+class PostForm(Form):
+	post = StringField('post', validators=[DataRequired()])
 
 
 
