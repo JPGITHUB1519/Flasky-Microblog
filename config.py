@@ -23,3 +23,6 @@ MAIL_PASSWORD = None
 
 # administrator list
 ADMINS = ['juanpedro1519@gmail.com']
+
+# How much post to show in the main page
+POSTS_PER_PAGE = 3
