@@ -3,6 +3,7 @@ from flask_wtf import Form
 from wtforms import StringField, BooleanField, PasswordField, TextAreaField, validators
 from wtforms.validators import *
 from app.models import User
+from flask_babel import gettext
 import logging
 
 class LoginForm(Form):
@@ -38,6 +39,9 @@ class EditForm(Form):
 		# if the users enters the same nickname that him
 		if self.nickname.data == self.original_nickname:
 			return True
+		if self.nickname.data != User.make_valid_nickname(self.nickname.data):
+			self.nickname.errors.append(gettext("This nickname has invalid characters. Please use letters, numbers, dots and underscores only"))
+			validated=False
 		# look for the nickname in db and if exits throw the error
 		user = User.query.filter_by(nickname=self.nickname.data).first()
 		if user != None:

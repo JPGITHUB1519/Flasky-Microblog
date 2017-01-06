@@ -6,11 +6,12 @@ from flask_openid import OpenID
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD 
 from flask_mail import Mail
 from .momentjs import momentjs
-
+from flask_babel import Babel
 app = Flask(__name__)
 app.config.from_object('config')
 #This just tells Jinja2 to expose our class as a global variable to all templates.
 app.jinja_env.globals["momentjs"] = momentjs
+babel = Babel(app)
 # database
 db = SQLAlchemy(app)
 lm = LoginManager()

@@ -3,9 +3,17 @@
 		<img src="{{ post.author.avatar(50) }}"> 
 	</a>
 	<div class="media-body">
-		<h4 class="media-heading"><a class="pull-left" href="{{ url_for('user', nickname=post.author.nickname) }}">{{ post.author.nickname }} </a><small>{{ momentjs(post.timestamp).fromNow() }}</small></h4>
-		<!-- {{ post.author.nickname }}  -->
-		{{ post.body }}
+		{% autoscape false %}
+			<!-- <h4 class="media-heading">
+				<a class="pull-left" href="{{ url_for('user', nickname=post.author.nickname) }}">{{ post.author.nickname }} </a><small>{{ momentjs(post.timestamp).fromNow() }}</small>
+			</h4> -->
+			<!-- {{ post.author.nickname }}  -->
+
+			{% autoescape false %}
+				<p>{{ _('%(nickname)s said %(when)s:', nickname = '<a href="%s">%s</a>' % (url_for('user', nickname=post.author.nickname), post.author.nickname), when=momentjs(post.timestamp).fromNow()) }}</p>
+			{% endautoescape %}
+			{{ post.body }}
+		{% endautoscape %}
 	</div>
 </div>
 

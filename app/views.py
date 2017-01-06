@@ -1,18 +1,25 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 #importing the app variable of the app/__init__.py
-from app import app, db, lm
+from app import app, db, lm, babel
 # importing the wtfform loginform
 from .forms import *
 from .models import User, Post
 import utility
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES
 from .emails import follower_notification
+from flask_babel import gettext
 # load user from database
 @lm.user_loader
 def load_user(id):
 	return User.query.get(int(id))
+
+# choosing what languages will use babel
+# localeselector decorator will be called before each request to give us a chance to choose the language to use when producing its response.
+@babel.localeselector
+def get_locale():
+	return request.accept_languages.best_match(LANGUAGES.keys())
 
 # this will run before any request
 @app.before_request
@@ -52,7 +59,7 @@ def index(page=1):
  		post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user)
 		db.session.add(post)
 		db.session.commit()
-		flash("Your post is now live!")
+		flash(gettext("Your post is now live!"))
 		return redirect(url_for('index'))
 
 	if request.method == "GET" :
@@ -109,7 +116,7 @@ def signup():
 	""" View for Sign Up a user """
 	form = SignUpForm()
 	if request.method == "POST" and form.validate():
-		user = User(nickname=form.username.data, password=utility.make_password_hash(form.username.data, form.password.data))
+		user = User(nickname=make_valid_nickname(form.username.data), password=utility.make_password_hash(form.username.data, form.password.data))
 		user.authenticated = True
 		db.session.add(user)
 		db.session.commit()

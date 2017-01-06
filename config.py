@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 # database configuration
@@ -48,3 +49,10 @@ MAIL_PASSWORD = 'jp23051519'
 
 # administrator list
 ADMINS = ['juanpedro1519@gmail.com']
+
+# available languajes
+languages = {
+	'en' : 'English',
+	'es' : "Español"
+}
+
