@@ -26,3 +26,10 @@ ADMINS = ['juanpedro1519@gmail.com']
 
 # How much post to show in the main page
 POSTS_PER_PAGE = 3
+
+# full text searcher config
+WHOOSH_BASE = os.path.join(basedir, "search.db")
+
+# max whoosh searcher result
+MAX_SEARCH_RESULTS = 50
+
