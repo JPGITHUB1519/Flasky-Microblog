@@ -3,7 +3,7 @@
 		<img src="{{ post.author.avatar(50) }}"> 
 	</a>
 	<div class="media-body">
-		<h4 class="media-heading"><a class="pull-left" href="{{ url_for('user', nickname=post.author.nickname) }}">{{ post.author.nickname }} </a><small>{{ post.timestamp }}</small></h4>
+		<h4 class="media-heading"><a class="pull-left" href="{{ url_for('user', nickname=post.author.nickname) }}">{{ post.author.nickname }} </a><small>{{ momentjs(post.timestamp).fromNow() }}</small></h4>
 		<!-- {{ post.author.nickname }}  -->
 		{{ post.body }}
 	</div>
