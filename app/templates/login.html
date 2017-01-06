@@ -3,28 +3,35 @@
 	<script type="text/javascript">
 	</script>
 	<!-- form = form object -->
-	<h1>Log In</h1>
-	<form action="" method="post" name="login">
-		<!-- will be replaced with a csrf prevention we have to put it in all of our forms -->
-		{{ form.hidden_tag() }}
-		<div>
-			<label>
-				Username
-				{{ form.username }}
-			</label>
-			{% for error in form.username.errors %}
-				<span style="color:red;">[{{ error }}]</span>
-			{% endfor %}
+	<div class="row">
+		<div class="col-md-6 center-inner-block">
+			<h1 class="text-center">Login</h1>
+			<form action="" method="post" name="login">
+				<!-- will be replaced with a csrf prevention we have to put it in all of our forms -->
+				{{ form.hidden_tag() }}
+				<div class="form-group">
+					<label>Username</label>
+					{{ form.username(class_="form-control") }}
+					{% for error in form.username.errors %}
+						<span style="color:red;">[{{ error }}]</span>
+					{% endfor %}
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					{{ form.password(class_="form-control") }}
+					{% for error in form.password.errors %}
+						<span style="color:red;">[{{ error }}]</span>
+					{% endfor %}
+					</div>
+				<div>		
+				{{ form.remember_me() }} Remember Me
+				<div class="row">
+					<div class="col-xs-12">
+						<input type="submit" name="" value="Sign In" class="btn btn-default center-block">
+					</div>
+				</div>
+			</form>
 		</div>
-		<label>
-			Password
-			{{ form.password }}
-		</label>
-		{% for error in form.password.errors %}
-			<span style="color:red;">[{{ error }}]</span>
-		{% endfor %}
-		<div>		
-		<p> {{ form.remember_me }} Remember Me</p>
-		<p><input type="submit" name="" value="Sign In"></p>
 	</form>
+
 {% endblock %}

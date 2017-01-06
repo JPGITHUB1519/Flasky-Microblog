@@ -1,37 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1> Hello {{ g.user.nickname }} !</h1>
-	<div>
-	<form method="post" name="post">
-		{{ form.hidden_tag() }}
-		<div>
-			<label>Say Something : </label>
+	<div class="row">
+		<div class="col-md-12">
+			<h1> Hello {{ g.user.nickname }} !</h1>
 		</div>
-		<div>
-			{{ form.post(size=30, maxlength=140) }}
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="well">
+				<form method="post" name="post">
+					{{ form.hidden_tag() }}
+					<div class="form-group">
+						<label>Say Something : </label>
+						{{ form.post(size=30, maxlength=140, class_="form-control") }}
+					</div>
+					<div>
+						{% for error in form.post.errors %}
+							<span style="color:red;">[{{ error }}]</span>
+						{% endfor %}
+					</div>
+					<input type="submit" name="" value="Post!" class="btn btn-info">
+				</form>
+			</div>
 		</div>
-		<div>
-			{% for error in form.post.errors %}
-				<span style="color:red;">[{{ error }}]</span>
-			{% endfor %}
-		</div>
-		<div>
-			<input type="submit" name="" value="Post!">
-		</div>
-	</form>
 	</div>
 	{% for post in posts.items %}
 		{% include 'post.html' %}
 	{% endfor %}
-	{% if posts.has_prev %}
-		<a href="{{ url_for('index', page=posts.prev_num) }}">&lt;&lt;Newer Posts</a>
-	{% else %}
-		&lt;&lt;Newer Posts 
-	{% endif %}
-	{% if posts.has_next %}
-		<a href="{{ url_for('index', page=posts.next_num) }}">&lt;&lt;Older Posts</a>
-	{% else %}
-		&lt;&lt;Older Posts 
-	{% endif %}
+	<ul class="pager">
+		{% if posts.has_prev %}
+			<li class="previous">
+				<a href="{{ url_for('index', page=posts.prev_num) }}">&larr;Newer Posts</a>
+			</li>
+		{% else %}
+			<li class="previous disabled">
+				<a href="{{ url_for('index', page=posts.prev_num) }}">&larr; Newer Posts</a>
+			</li>
+		{% endif %}
+		{% if posts.has_next %}
+			<li class="next">
+				<a href="{{ url_for('index', page=posts.next_num) }}">&larr; Older Posts</a>
+			</li>
+		{% else %}
+			<li class="next disabled">
+				<a href="{{ url_for('index', page=posts.next_num) }}">&larr; Older Posts</a>
+			</li>
+		{% endif %}
+	</ul>
 {% endblock %}
