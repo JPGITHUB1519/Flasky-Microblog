@@ -16,13 +16,13 @@ OPENID_PROVIDERS = [
 ]
 
 # mail server settings
-MAIL_SERVER = 'localhost'
-MAIL_PORT = 25
-MAIL_USERNAME = None
-MAIL_PASSWORD = None
+# MAIL_SERVER = 'localhost'
+# MAIL_PORT = 25
+# MAIL_USERNAME = None
+# MAIL_PASSWORD = None
 
-# administrator list
-ADMINS = ['juanpedro1519@gmail.com']
+# # administrator list
+# ADMINS = ['juanpedro1519@gmail.com']
 
 # How much post to show in the main page
 POSTS_PER_PAGE = 3
@@ -33,3 +33,18 @@ WHOOSH_BASE = os.path.join(basedir, "search.db")
 # max whoosh searcher result
 MAX_SEARCH_RESULTS = 50
 
+# Email config
+
+# email server
+MAIL_SERVER = 'smtp.googlemail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+# MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+# MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+MAIL_USERNAME = 'juanpedro1519@gmail.com'
+MAIL_PASSWORD = 'jp23051519'
+
+
+# administrator list
+ADMINS = ['juanpedro1519@gmail.com']
